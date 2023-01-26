@@ -1,2 +1,5 @@
 import $ from 'jquery';
-global.$ = global.jQuery = $;
+// import 'bootstrap/dist/css/bootstrap.css';
+global.$ = $;
+global.jQuery = $;
+

@@ -260,11 +260,7 @@ describe("Given I am a user connected as Admin", () => {
   describe("When an error occurs on API", () => {
     beforeEach(() => {
       jest.spyOn(mockStore, "bills")
-      Object.defineProperty(
-          window,
-          'localStorage',
-          { value: localStorageMock }
-      )
+      Object.defineProperty(window,'localStorage', { value: localStorageMock })
       window.localStorage.setItem('user', JSON.stringify({
         type: 'Admin',
         email: "a@a"
