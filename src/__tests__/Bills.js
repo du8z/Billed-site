@@ -72,20 +72,21 @@ describe("Given I am connected as an employee", () => {
 
 
     })
-  test('then when i click on button NewBill modal should open', ()=>{
-    window.onNavigate(ROUTES_PATH.Bills)
 
-    const store = null
+    test('then when i click on button NewBill modal should open', () => {
+      const onNavigate = jest.fn();
+      const store = null;
+      const bill = new Bills({
+        document, onNavigate, store, bills, localStorage: window.localStorage
+      })
+      const buttonNewBill = screen.getByText("Nouvelle note de frais");
+      const handleClickNewBill = jest.fn(bill.handleClickNewBill());
 
-    const bill = new Bills({
-      document, onNavigate, store, bills, localStorage: window.localStorage
+      buttonNewBill.addEventListener("click", handleClickNewBill);
+      userEvent.click(buttonNewBill);
+      expect(onNavigate).toHaveBeenCalledWith(ROUTES_PATH["NewBill"]);
+
     })
-    const handleClickNewBill = jest.fn(bill.handleClickNewBill())
-    const buttonNewBill = document.createElement('button')
-    buttonNewBill.addEventListener('click', handleClickNewBill)
-    userEvent.click(buttonNewBill)
-    expect(onNavigate).toHaveBeenCalledWith(ROUTES_PATH['NewBill'])
-  })
   })
 })
 
@@ -95,3 +96,33 @@ describe("Given I am connected as an employee", () => {
 
 
 
+
+
+
+
+
+
+
+/* 
+    Object.defineProperty(window, 'localStorage', { value: localStorageMock })
+    window.localStorage.setItem('user', JSON.stringify({
+      type: 'Employee'
+    }))
+ 
+    const onNavigate = () => {
+    document.body.innerHTML = BillsUI(bills[0])
+
+    }
+  
+
+    const store = null
+
+    const bill = new Bills({
+      document, onNavigate, store, bills, localStorage: window.localStorage
+    })
+    const buttonNewBill = screen.getByText('Nouvelle note de frais')
+    const handleClickNewBill = jest.fn(bill.handleClickNewBill())
+    
+    buttonNewBill.addEventListener('click', handleClickNewBill)
+    userEvent.click(buttonNewBill)
+    expect(onNavigate).toHaveBeenCalledWith(ROUTES_PATH['NewBill']) */
