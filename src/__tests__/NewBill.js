@@ -4,11 +4,12 @@
 
 import {fireEvent, screen } from "@testing-library/dom"
 import NewBillUI from "../views/NewBillUI.js"
-import NewBill, {handleSubmit} from "../containers/NewBill.js"
+import NewBill, {handleSubmit, handleChangeFile} from "../containers/NewBill.js"
 import Bills from "../containers/Bills.js"
 import { localStorageMock } from "../__mocks__/localStorage.js"
 import { bills } from "../fixtures/bills"
 import userEvent from '@testing-library/user-event'
+import { ROUTES_PATH } from "../constants/routes.js";
 
 
 
@@ -19,36 +20,31 @@ describe("Given I am connected as an employee", () => {
 
     })
     describe('When i click on submit', ()=>{
-      test('I should be sent on Bills with My expense reports ', ()=>{
+    test('then newBill was send and u go back on bills page', () => {
+      Object.defineProperty(window, 'localStorage', { value: localStorageMock })
+      window.localStorage.setItem('user', JSON.stringify({
+        type: 'Employee'
+      }))
+      document.body.innerHTML = NewBillUI(bills[0])
 
-        Object.defineProperty(window, 'localStorage', { value: localStorageMock })
-        window.localStorage.setItem('user', JSON.stringify({
-          type: 'Employee',
-          email: 'a@a'
-        }))
-        document.body.innerHTML = NewBillUI(bills[0])
-
-        const onNavigate = (pathname) => {
-          document.body.innerHTML = ROUTES({ pathname })
-        }
-  
-        const store = null
-        const newBill = new NewBill({
-          document, onNavigate, store, bills:bills, localStorage: window.localStorage})
-  
-  
-  
-  
-        const submit = screen.getByTestId('btn-submit-newBill')
-        const handleSubmit = jest.fn((e) => newBill.handleSubmit(e))
-        submit.addEventListener('click', handleSubmit)
-        fireEvent.click(submit)
-        expect(handleSubmit).toHaveBeenCalled()
-        const Test = screen.queryByTestId("btn-new-bill")
-        expect(Test).toBeTruthy()
-
-
+      const onNavigate = jest.fn();
+      const store = null
+      const newBill = new NewBill({
+        document, onNavigate, store, bills, localStorage: window.localStorage
       })
+
+      const buttonSubmit = screen.getByText("Envoyer");
+      const HandleSubmit = jest.fn(handleSubmit);
+
+      buttonSubmit.addEventListener("click", HandleSubmit);
+      userEvent.click(buttonSubmit);
+
+      expect(onNavigate).toHaveBeenCalledWith(ROUTES_PATH['Bills']);
+ 
+    
+    })
     })
   })
 })
+
+
