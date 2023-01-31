@@ -87,6 +87,35 @@ describe("Given I am connected as an employee", () => {
       expect(onNavigate).toHaveBeenCalledWith(ROUTES_PATH["NewBill"]);
 
     })
+
+    test('getBills returns the expected data', () => {
+      const store = {
+        bills: jest.fn().mockReturnValue({
+          list: jest.fn().mockReturnValue(Promise.resolve([
+            { date: '2022-01-01', status: 'pending' },
+            { date: '2022-02-01', status: 'accepted' },
+            { date: '2022-03-01', status: 'refused' }
+          ]))
+        })
+      }
+    
+      const bill = new Bills({
+        document,
+        onNavigate: jest.fn(),
+        store,
+        bills: [],
+        localStorage: window.localStorage
+      })
+    
+      return bill.getBills().then(data => {
+        expect(data).toEqual([
+          { date: '1 Jan. 22', status: 'En attente' },
+          { date: '1 Fév. 22', status: 'Accepté' },
+          { date: '1 Mar. 22', status: 'Refused' }
+        ])
+      })
+    })
+    
   })
 })
 

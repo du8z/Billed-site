@@ -17,7 +17,6 @@ export default class Login {
   }
   handleSubmitEmployee = e => {
     e.preventDefault()
-    console.log('test');
     const user = {
       type: "Employee",
       email: e.target.querySelector(`input[data-testid="employee-email-input"]`).value,
