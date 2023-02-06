@@ -79,6 +79,7 @@ describe("Given I am connected as an employee", () => {
       const bill = new Bills({
         document, onNavigate, store, bills, localStorage: window.localStorage
       })
+      
       const buttonNewBill = screen.getByText("Nouvelle note de frais");
       const handleClickNewBill = jest.fn(bill.handleClickNewBill());
 
