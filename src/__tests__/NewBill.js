@@ -29,7 +29,7 @@ describe("Given I am connected as an employee", () => {
 
       const onNavigate = jest.fn();
       const store = null
-      const newBill = new NewBill({
+      new NewBill({
         document, onNavigate, store, bills, localStorage: window.localStorage
       })
 
@@ -44,6 +44,48 @@ describe("Given I am connected as an employee", () => {
     
     })
     })
+
+    test("handleChangeFile with jpg file", async () => {
+      Object.defineProperty(window, 'localStorage', { value: localStorageMock })
+      window.localStorage.setItem('user', JSON.stringify({
+        email: 'a@a.com'
+      }))
+      document.body.innerHTML = NewBillUI(bills[0])
+    
+      const onNavigate = jest.fn()
+      const store = {
+        bills: jest.fn(() => ({
+          create: jest.fn(() => Promise.resolve({
+            fileUrl: 'file-url',
+            key: 'key'
+          }))
+        }))
+      }
+      const newBill = new NewBill({
+        document,
+        onNavigate,
+        store,
+        bills,
+        localStorage: window.localStorage
+      })
+    
+      const img = document.createElement('i')
+      img.setAttribute('data-bill-url', 'https://example.com/bill.jpg')
+    
+      const e = {
+        target: { value: 'path/to/file.jpg' },
+        preventDefault: jest.fn()
+      }
+    
+      const ChangeFile = jest.fn(() => newBill.handleChangeFile(e))
+      img.addEventListener('click', ChangeFile)
+    
+      userEvent.click(img)
+      await Promise.resolve()
+      expect(ChangeFile).toHaveBeenCalled()
+      expect(newBill.fileUrl).toBe('file-url')
+    })
+    
   })
 })
 
