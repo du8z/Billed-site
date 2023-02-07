@@ -108,6 +108,7 @@ describe("Given I am connected as an employee", () => {
         localStorage: window.localStorage
       })
     
+      
       return bill.getBills().then(data => {
         expect(data).toEqual([
           { date: '1 Jan. 22', status: 'En attente' },
